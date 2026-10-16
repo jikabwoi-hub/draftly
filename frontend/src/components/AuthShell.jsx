@@ -61,19 +61,13 @@ export function AuthShell({ title, subtitle, children, footer }) {
             </span>
           </Link>
 
-          <div
-            className="relative overflow-hidden rounded-2xl border border-hairline p-8 backdrop-blur-xl"
-            style={{
-              background: "var(--surface)",
-              boxShadow: "var(--shadow-panel)",
-            }}
-          >
+          <div className="liquid relative overflow-hidden rounded-2xl p-8">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-x-0 -top-px h-px"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent, oklch(0.78 0.18 200 / 0.6), oklch(0.62 0.25 295 / 0.6), transparent)",
+                  "linear-gradient(90deg, transparent, oklch(0.8 0.1 215 / 0.4), oklch(0.66 0.15 268 / 0.4), transparent)",
               }}
             />
 

@@ -160,7 +160,7 @@ export default function Editor() {
     try {
       const { data: newProposal } = await api.post(`/rfps/${proposal.rfp}/generate/`);
       toast.success("Regenerating — you'll be taken to the new draft.");
-      navigate(`/proposals/${newProposal.id}`);
+      navigate(`/app/proposals/${newProposal.id}`);
     } catch (err) {
       toast.error(err.response?.data?.detail || "Failed to regenerate.");
       setRegeneratingId(null);
@@ -275,7 +275,7 @@ export default function Editor() {
             className="radial-pulse absolute h-24 w-24 rounded-full border border-cyan/40"
             style={{ animationDelay: "0.8s" }}
           />
-          <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet to-magenta shadow-[var(--shadow-glow-violet)]">
+          <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-soft)]">
             <Sparkles className="h-7 w-7 text-white" />
           </div>
         </div>
@@ -301,7 +301,7 @@ export default function Editor() {
           </p>
           <button
             onClick={() => handleRegenerate()}
-            className="mx-auto mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)]"
+            className="mx-auto mt-5 flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)]"
           >
             <RefreshCw className="h-4 w-4" /> Try again
           </button>
@@ -320,7 +320,7 @@ export default function Editor() {
           style={{ background: "var(--sidebar-bg)" }}
         >
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/app")}
             className="flex items-center gap-2 text-xs text-muted-foreground transition hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to generator
@@ -349,7 +349,7 @@ export default function Editor() {
                       {active && (
                         <motion.span
                           layoutId="ed-sec-pill"
-                          className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-gradient-to-b from-violet to-magenta"
+                          className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-primary"
                         />
                       )}
                       <span className="font-mono text-[10px] text-cyan">
@@ -379,7 +379,7 @@ export default function Editor() {
             style={{ background: "oklch(0 0 0 / 0)" }}
           >
             <div className="flex min-w-0 items-center gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet to-magenta">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary">
                 <FileText className="h-4 w-4 text-white" />
               </span>
               <div className="min-w-0">
@@ -427,7 +427,7 @@ export default function Editor() {
               </button>
               <button
                 onClick={handleDownloadDOCX}
-                className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet to-magenta px-4 py-1.5 text-xs font-semibold text-white shadow-[var(--shadow-glow-violet)]"
+                className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-white shadow-[var(--shadow-soft)]"
               >
                 <FileDown className="h-3.5 w-3.5" /> Export DOCX
               </button>
@@ -540,7 +540,7 @@ export default function Editor() {
                   <button
                     onClick={() => handleSave(true)}
                     disabled={saving}
-                    className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet to-magenta px-4 py-2 text-xs font-semibold text-white shadow-[var(--shadow-glow-violet)] disabled:opacity-50"
+                    className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-[var(--shadow-soft)] disabled:opacity-50"
                   >
                     <Check className="h-3.5 w-3.5" /> Finalize
                   </button>

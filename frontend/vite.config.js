@@ -8,6 +8,11 @@ export default defineConfig(({ mode }) => {
   plugins: [tailwindcss(), react()],
   server: {
     port: 5173,
+    // Bind to all interfaces so the dev server can be reached through a
+    // sandbox/tunnel host. Vite 7 blocks unknown Host headers by default, so
+    // the tunnel domains are explicitly allow-listed below.
+    host: true,
+    allowedHosts: [".myninja.ai", "localhost", "127.0.0.1"],
     headers: {
       "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
     },

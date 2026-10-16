@@ -67,7 +67,7 @@ export default function VerifyEmail() {
             <p className="text-sm text-foreground">{message}</p>
             <Link
               to="/login"
-              className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-violet to-magenta text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] transition"
+              className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary text-sm font-semibold text-white shadow-[var(--shadow-soft)] transition"
             >
               <span
                 aria-hidden

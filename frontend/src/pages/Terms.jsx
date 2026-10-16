@@ -33,11 +33,7 @@ export default function Terms() {
               <Link
                 to="/login"
                 className="rounded-lg px-3 py-1.5 text-sm font-medium transition"
-                style={{
-                  background: "linear-gradient(135deg, var(--violet), var(--magenta))",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
+                style={{ color: "var(--primary)" }}
               >
                 Sign in →
               </Link>

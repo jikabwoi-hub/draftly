@@ -25,7 +25,7 @@ export function AppShell() {
   const handleTourAction = useCallback(
     (action) => {
       if (action === "generate") {
-        navigate("/");
+        navigate("/app");
       }
     },
     [navigate]
@@ -34,13 +34,13 @@ export function AppShell() {
   return (
     <div className="relative h-dvh overflow-hidden">
       <div className="app-backdrop" />
-      <div className="stars pointer-events-none absolute inset-0 opacity-40" />
+      <div className="stars pointer-events-none absolute inset-0 opacity-20" />
       <div className="relative z-10 flex h-full flex-col">
         {isPastDue && (
           <div className="flex shrink-0 items-center justify-center gap-2 bg-amber/15 px-4 py-2 text-xs font-medium text-amber ring-1 ring-inset ring-amber/30">
             <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
             Payment failed — please{" "}
-            <a href="/settings" className="underline underline-offset-2 hover:text-amber/80">
+            <a href="/app/settings" className="underline underline-offset-2 hover:text-amber/80">
               update your payment method
             </a>{" "}
             to avoid service interruption.
@@ -62,7 +62,7 @@ export function AppShell() {
                 <span>Demo Tutorial</span>
               </button>
               <Link
-                to="/pricing"
+                to="/app/pricing"
                 className="hidden sm:inline-flex items-center gap-1 rounded-lg border border-hairline bg-surface px-2.5 py-1 text-xs text-muted-foreground transition hover:border-violet/40 hover:text-foreground"
               >
                 View Plans

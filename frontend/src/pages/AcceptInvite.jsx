@@ -65,7 +65,7 @@ export default function AcceptInvite() {
       localStorage.setItem("refresh_token", data.refresh);
       await fetchMe();
       toast.success(`Welcome to ${invite.org_name}!`);
-      navigate("/", { replace: true });
+      navigate("/app", { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.detail || "Could not accept the invitation.");
       setSubmitting(false);
@@ -168,7 +168,7 @@ export default function AcceptInvite() {
             <button
               type="submit"
               disabled={submitting || !password || !confirmPw}
-              className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-violet to-magenta text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] transition disabled:opacity-50"
+              className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary text-sm font-semibold text-white shadow-[var(--shadow-soft)] transition disabled:opacity-50"
             >
               {submitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

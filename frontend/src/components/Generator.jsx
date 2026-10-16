@@ -262,7 +262,7 @@ export function Generator() {
       const detail = err.response?.data?.detail || "";
       if (err.response?.status === 403 && detail.toLowerCase().includes("quota")) {
         toast.error(detail);
-        navigate("/pricing");
+        navigate("/app/pricing");
       } else {
         toast.error(detail || "Failed to create RFP.");
       }
@@ -321,7 +321,7 @@ export function Generator() {
   );
 
   function openInEditor() {
-    if (proposalId) navigate(`/proposals/${proposalId}`);
+    if (proposalId) navigate(`/app/proposals/${proposalId}`);
   }
 
   return (
@@ -355,7 +355,7 @@ export function Generator() {
           )}
           <span className="hidden text-sm text-muted-foreground sm:inline">{displayName}</span>
           <div className="relative h-9 w-9 overflow-hidden rounded-full ring-1 ring-violet/50">
-            <span className="absolute inset-0 bg-gradient-to-br from-violet to-magenta" />
+            <span className="absolute inset-0 bg-primary" />
             <span className="relative z-10 flex h-full w-full items-center justify-center text-xs font-semibold text-white">
               {initials}
             </span>
@@ -384,7 +384,7 @@ export function Generator() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -8, scale: 0.97 }}
                     transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                    className="relative mb-8 overflow-hidden rounded-2xl border border-violet/40 bg-surface/70 p-5 text-left backdrop-blur-md shadow-[var(--shadow-glow-violet)]"
+                    className="relative mb-8 overflow-hidden rounded-2xl border border-violet/40 bg-surface/70 p-5 text-left backdrop-blur-md shadow-[var(--shadow-soft)]"
                   >
                     {/* shimmer top edge */}
                     <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet to-transparent opacity-70" />
@@ -556,7 +556,7 @@ export function Generator() {
                         <button
                           aria-label={`Remove ${f.name}`}
                           onClick={() => removeFile(f.id)}
-                          className="ml-1 text-muted-foreground hover:text-magenta"
+                          className="ml-1 text-muted-foreground hover:text-destructive"
                         >
                           <X className="h-3.5 w-3.5" />
                         </button>
@@ -771,7 +771,7 @@ export function Generator() {
                     whileTap={{ scale: 0.94 }}
                     onClick={generate}
                     disabled={phase === "thinking"}
-                    className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] transition hover:shadow-[var(--shadow-glow-magenta)] disabled:opacity-60"
+                    className="group relative flex items-center gap-2 overflow-hidden rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)] transition hover:bg-primary/90 disabled:opacity-60"
                   >
                     {phase === "thinking" ? (
                       <>
@@ -915,7 +915,7 @@ function ThinkingStage({ files, stage, stageLabel, ticker, elapsed }) {
                 scale: [0.6, 1, 0.4],
               }}
               transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}
-              className="absolute flex items-center gap-1.5 rounded-md border border-cyan/40 bg-surface-2/80 px-2 py-1 text-[10px] text-cyan shadow-[var(--shadow-glow-cyan)]"
+              className="absolute flex items-center gap-1.5 rounded-md border border-cyan/40 bg-surface-2/80 px-2 py-1 text-[10px] text-cyan shadow-[var(--shadow-soft)]"
             >
               <FileText className="h-3 w-3" />
               <span className="max-w-[80px] truncate">{f.name}</span>
@@ -924,7 +924,7 @@ function ThinkingStage({ files, stage, stageLabel, ticker, elapsed }) {
         })}
 
         {/* Core */}
-        <div className="pulse-ring relative z-10 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-violet via-magenta to-cyan shadow-[var(--shadow-glow-violet)]">
+        <div className="pulse-ring relative z-10 flex h-24 w-24 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-soft)]">
           <Sparkles className="h-8 w-8 text-white" />
         </div>
       </div>
@@ -1050,7 +1050,7 @@ function ResultCard({ onOpen, title, tone }) {
               Team, Investment, Next Steps. Click to open in editor.
             </p>
           </div>
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet to-magenta text-white shadow-[var(--shadow-glow-violet)] transition group-hover:scale-110">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-[var(--shadow-soft)] transition group-hover:scale-110">
             <ArrowRight className="h-5 w-5" />
           </span>
         </div>
@@ -1072,7 +1072,7 @@ function ResultCard({ onOpen, title, tone }) {
 
         <div className="mt-5 flex items-center justify-between border-t border-hairline pt-4 text-xs">
           <span className="text-muted-foreground">Open in editor to refine each section</span>
-          <span className="font-mono uppercase tracking-widest text-violet group-hover:text-magenta">
+          <span className="font-mono uppercase tracking-widest text-violet group-hover:text-destructive">
             Open editor →
           </span>
         </div>

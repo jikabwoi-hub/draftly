@@ -73,8 +73,8 @@ export default function CookieConsentBanner() {
                 onClick={accept}
                 className="rounded-xl px-4 py-2 text-sm font-semibold text-white transition"
                 style={{
-                  background: "linear-gradient(135deg, var(--violet), var(--magenta))",
-                  boxShadow: "var(--shadow-glow-violet)",
+                  background: "var(--primary)",
+                  boxShadow: "var(--shadow-soft)",
                 }}
               >
                 Accept All

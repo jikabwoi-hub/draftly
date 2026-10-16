@@ -91,7 +91,7 @@ export default function Proposals() {
           className="flex items-center justify-between gap-4"
         >
           <div className="flex items-center gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet to-magenta shadow-[var(--shadow-glow-violet)]">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-[var(--shadow-soft)]">
               <FileText className="h-6 w-6 text-white" />
             </span>
             <div>
@@ -104,8 +104,8 @@ export default function Proposals() {
             </div>
           </div>
           <Link
-            to="/"
-            className="flex items-center gap-2 rounded-full bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] transition hover:shadow-[var(--shadow-glow-magenta)]"
+            to="/app"
+            className="flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)] transition hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" /> New Proposal
           </Link>
@@ -149,7 +149,7 @@ export default function Proposals() {
                     <motion.span
                       layoutId="proposal-filter-pill"
                       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-violet to-cyan shadow-[var(--shadow-glow-violet)]"
+                      className="absolute inset-0 -z-10 rounded-full bg-primary shadow-[var(--shadow-soft)]"
                     />
                   )}
                   <span className="relative">
@@ -186,8 +186,8 @@ export default function Proposals() {
             </p>
             {!search && filter === "All" && (
               <Link
-                to="/"
-                className="mt-2 flex items-center gap-2 rounded-full bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)]"
+                to="/app"
+                className="mt-2 flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)]"
               >
                 <Sparkles className="h-4 w-4" /> Create First Proposal
               </Link>

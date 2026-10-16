@@ -65,7 +65,7 @@ export function AuthForm({ mode }) {
         setRegistered(true);
       } else {
         await login(email.trim(), password);
-        navigate("/");
+        navigate("/app");
       }
     } catch (err) {
       const data = err.response?.data;
@@ -97,7 +97,7 @@ export function AuthForm({ mode }) {
           localStorage.setItem("access_token", data.access);
           localStorage.setItem("refresh_token", data.refresh);
           useAuthStore.setState({ user: data.user });
-          navigate("/");
+          navigate("/app");
         }
       } catch (err) {
         const msg = err.response?.data?.detail || "Google sign-in failed. Please try again.";
@@ -118,7 +118,7 @@ export function AuthForm({ mode }) {
     setDemoLoading(true);
     try {
       await demoLogin();
-      navigate("/");
+      navigate("/app");
     } catch {
       setError("Could not start the demo. Please try again in a moment.");
     } finally {
@@ -141,7 +141,7 @@ export function AuthForm({ mode }) {
     try {
       await googleComplete(googleCredential, googleOrgName.trim());
       toast.success("Welcome! Your workspace is ready.");
-      navigate("/");
+      navigate("/app");
     } catch (err) {
       const msg = err.response?.data?.detail || "Could not complete sign-up. Please try again.";
       setError(msg);
@@ -236,7 +236,7 @@ export function AuthForm({ mode }) {
           type="submit"
           disabled={googleLoading}
           whileTap={{ scale: 0.98 }}
-          className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-violet to-magenta text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] transition disabled:opacity-70"
+          className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-[var(--shadow-soft)] hover:bg-primary/90 transition disabled:opacity-70"
         >
           <span
             aria-hidden
@@ -349,7 +349,7 @@ export function AuthForm({ mode }) {
         type="submit"
         disabled={loading}
         whileTap={{ scale: 0.98 }}
-        className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-violet to-magenta text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] transition disabled:opacity-70"
+        className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-[var(--shadow-soft)] hover:bg-primary/90 transition disabled:opacity-70"
       >
         <span
           aria-hidden

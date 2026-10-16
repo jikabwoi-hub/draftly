@@ -374,7 +374,7 @@ export function DemoOnboardingModal({ open, onClose, onAction }) {
                 ) : (
                   <button
                     onClick={handleStartGenerating}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet to-magenta px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-violet/30 transition hover:opacity-95 active:scale-95"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-violet/30 transition hover:opacity-95 active:scale-95"
                   >
                     <Sparkles className="h-3.5 w-3.5" />
                     Start Exploring Demo

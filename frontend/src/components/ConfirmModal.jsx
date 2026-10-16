@@ -164,10 +164,10 @@ export default function ConfirmModal({
                   style={{
                     background: isDestructive
                       ? "linear-gradient(135deg, var(--destructive), color-mix(in oklab, var(--destructive) 75%, var(--amber)))"
-                      : "linear-gradient(135deg, var(--violet), var(--magenta))",
+                      : "var(--primary)",
                     boxShadow: isDestructive
-                      ? "0 0 24px -4px var(--destructive)"
-                      : "var(--shadow-glow-violet)",
+                      ? "0 8px 20px -12px var(--destructive)"
+                      : "var(--shadow-soft)",
                   }}
                 >
                   {loading && (

@@ -9,35 +9,35 @@ const accentMap = {
     text: "text-violet",
     bg: "bg-violet/15",
     border: "border-violet/40",
-    glow: "var(--shadow-glow-violet)",
+    glow: "0 18px 40px -24px var(--violet)",
     hex: "var(--violet)",
   },
   cyan: {
     text: "text-cyan",
     bg: "bg-cyan/15",
     border: "border-cyan/40",
-    glow: "var(--shadow-glow-cyan)",
+    glow: "0 18px 40px -24px var(--cyan)",
     hex: "var(--cyan)",
   },
   magenta: {
     text: "text-magenta",
     bg: "bg-magenta/15",
     border: "border-magenta/40",
-    glow: "var(--shadow-glow-magenta)",
+    glow: "0 18px 40px -24px var(--magenta)",
     hex: "var(--magenta)",
   },
   emerald: {
     text: "text-emerald",
     bg: "bg-emerald/15",
     border: "border-emerald/40",
-    glow: "0 0 40px -8px var(--emerald)",
+    glow: "0 18px 40px -24px var(--emerald)",
     hex: "var(--emerald)",
   },
   amber: {
     text: "text-amber",
     bg: "bg-amber/15",
     border: "border-amber/40",
-    glow: "0 0 40px -8px var(--amber)",
+    glow: "0 18px 40px -24px var(--amber)",
     hex: "var(--amber)",
   },
 };
@@ -95,7 +95,7 @@ export default function Templates() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-4"
           >
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet to-cyan shadow-[var(--shadow-glow-violet)]">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-[var(--shadow-soft)]">
               <FileText className="h-6 w-6 text-white" />
             </span>
             <div>
@@ -135,7 +135,7 @@ export default function Templates() {
                       <motion.span
                         layoutId="filter-pill"
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-violet to-cyan shadow-[var(--shadow-glow-violet)]"
+                        className="absolute inset-0 -z-10 rounded-full bg-primary shadow-[var(--shadow-soft)]"
                       />
                     )}
                     <span className="relative">{f}</span>
@@ -201,7 +201,7 @@ export default function Templates() {
                         y: -6,
                         transition: { type: "spring", stiffness: 400, damping: 26 },
                       }}
-                      onClick={() => navigate("/", { state: { template: t } })}
+                      onClick={() => navigate("/app", { state: { template: t } })}
                       className="group relative overflow-hidden rounded-2xl border border-hairline bg-surface/60 p-6 text-left backdrop-blur-md transition hover:border-violet/40"
                       style={{ minHeight: 340 }}
                     >

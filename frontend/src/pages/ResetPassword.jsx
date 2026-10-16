@@ -103,7 +103,7 @@ export default function ResetPassword() {
             type="submit"
             disabled={loading}
             whileTap={{ scale: 0.98 }}
-            className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-violet to-magenta text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] transition disabled:opacity-70"
+            className="group relative flex h-11 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary text-sm font-semibold text-white shadow-[var(--shadow-soft)] transition disabled:opacity-70"
           >
             <span
               aria-hidden

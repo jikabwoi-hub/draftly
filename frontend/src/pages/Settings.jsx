@@ -171,7 +171,7 @@ export default function Settings() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4"
         >
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet to-magenta shadow-[var(--shadow-glow-violet)]">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-[var(--shadow-soft)]">
             <SettingsIcon className="h-6 w-6 text-white" />
           </span>
           <div>
@@ -206,7 +206,7 @@ export default function Settings() {
                 {isActive && (
                   <motion.span
                     layoutId="settings-tab"
-                    className="absolute inset-x-0 -bottom-px h-0.5 bg-gradient-to-r from-violet to-magenta"
+                    className="absolute inset-x-0 -bottom-px h-0.5 bg-primary"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -237,7 +237,7 @@ export default function Settings() {
                       />
                     ) : (
                       <>
-                        <span className="absolute inset-0 bg-gradient-to-br from-violet to-magenta" />
+                        <span className="absolute inset-0 bg-primary" />
                         <span className="relative z-10 flex h-full w-full items-center justify-center text-xl font-bold text-white">
                           {initials}
                         </span>
@@ -274,7 +274,7 @@ export default function Settings() {
                   <button
                     onClick={handleSaveProfile}
                     disabled={savingProfile || email === user?.email}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)] disabled:opacity-50"
                   >
                     {savingProfile ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -350,8 +350,8 @@ export default function Settings() {
                     {/* Billing action button */}
                     {user?.org?.subscription_tier === "free" ? (
                       <a
-                        href="/pricing"
-                        className="flex shrink-0 items-center gap-1.5 rounded-xl bg-gradient-to-r from-violet to-magenta px-4 py-2 text-xs font-semibold text-white shadow-[var(--shadow-glow-violet)]"
+                        href="/app/pricing"
+                        className="flex shrink-0 items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-white shadow-[var(--shadow-soft)]"
                       >
                         <CreditCard className="h-3.5 w-3.5" />
                         Upgrade
@@ -408,7 +408,7 @@ export default function Settings() {
                   <button
                     onClick={handleSaveOrg}
                     disabled={savingOrg || orgName === user?.org?.name}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)] disabled:opacity-50"
                   >
                     {savingOrg ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -453,7 +453,7 @@ export default function Settings() {
                                 ? "bg-destructive"
                                 : isWarning
                                   ? "bg-amber"
-                                  : "bg-gradient-to-r from-violet to-magenta"
+                                  : "bg-primary"
                             }`}
                             style={{ width: `${pct}%` }}
                           />
@@ -462,7 +462,7 @@ export default function Settings() {
                           <p className="mt-1.5 text-xs text-destructive">
                             Monthly proposal limit reached.{" "}
                             <a
-                              href="/pricing"
+                              href="/app/pricing"
                               className="underline underline-offset-2 hover:text-foreground"
                             >
                               Upgrade plan →
@@ -515,7 +515,7 @@ export default function Settings() {
                                 ? "bg-destructive"
                                 : isWarning
                                   ? "bg-amber"
-                                  : "bg-gradient-to-r from-violet to-magenta"
+                                  : "bg-primary"
                             }`}
                             style={{ width: `${pct}%` }}
                           />
@@ -524,7 +524,7 @@ export default function Settings() {
                           <p className="mt-1.5 text-xs text-destructive">
                             Document limit reached.{" "}
                             <a
-                              href="/pricing"
+                              href="/app/pricing"
                               className="underline underline-offset-2 hover:text-foreground"
                             >
                               Upgrade plan →
@@ -633,7 +633,7 @@ export default function Settings() {
                     <button
                       onClick={handleChangePassword}
                       disabled={savingPw || !currentPw || !newPw}
-                      className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] disabled:opacity-50"
+                      className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)] disabled:opacity-50"
                     >
                       {savingPw ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -807,7 +807,7 @@ function TeamTab({ user }) {
             <button
               type="submit"
               disabled={sending || !inviteEmail.trim() || seatsFull}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet to-magenta px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-glow-violet)] disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-soft)] disabled:opacity-50"
             >
               {sending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -840,7 +840,7 @@ function TeamTab({ user }) {
                     <img src={m.avatar_url} alt="" className="h-full w-full object-cover" />
                   ) : (
                     <>
-                      <span className="absolute inset-0 bg-gradient-to-br from-violet to-magenta" />
+                      <span className="absolute inset-0 bg-primary" />
                       <span className="relative z-10 flex h-full w-full items-center justify-center text-[11px] font-semibold text-white">
                         {name.slice(0, 2).toUpperCase()}
                       </span>

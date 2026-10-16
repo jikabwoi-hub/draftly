@@ -37,7 +37,7 @@ export default function NewRFP() {
       const { data: rfp } = await api.post("/rfps/", { title, raw_text: rawText });
       toast.success("RFP saved — generating proposal...");
       const { data: proposal } = await api.post(`/rfps/${rfp.id}/generate/`);
-      navigate(`/proposals/${proposal.id}`);
+      navigate(`/app/proposals/${proposal.id}`);
     } catch (err) {
       // Log full error so it's visible in browser DevTools (Network + Console tabs)
       console.error("[NewRFP] RFP creation failed:", {
@@ -67,7 +67,7 @@ export default function NewRFP() {
 
       if (err.response?.status === 403 && message.toLowerCase().includes("quota")) {
         toast.error(message);
-        navigate("/pricing");
+        navigate("/app/pricing");
       } else {
         toast.error(message);
       }

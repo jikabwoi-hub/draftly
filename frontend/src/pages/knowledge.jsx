@@ -136,7 +136,7 @@ export default function Knowledge() {
         const detail = err.response?.data?.detail || "";
         if (err.response?.status === 403 && detail.toLowerCase().includes("quota")) {
           toast.error(detail);
-          navigate("/pricing");
+          navigate("/app/pricing");
           break;
         }
         toast.error(detail || `Failed to upload ${file.name}`);
@@ -191,7 +191,7 @@ export default function Knowledge() {
           className="flex items-center justify-between gap-4"
         >
           <div className="flex items-center gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet to-cyan shadow-[var(--shadow-glow-violet)]">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-[var(--shadow-soft)]">
               <FolderOpen className="h-6 w-6 text-white" />
             </span>
             <div>
@@ -240,7 +240,7 @@ export default function Knowledge() {
               />
               <motion.span
                 whileHover={{ rotate: 6, scale: 1.05 }}
-                className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet to-cyan shadow-[var(--shadow-glow-violet)]"
+                className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary shadow-[var(--shadow-soft)]"
               >
                 {uploading ? (
                   <Loader2 className="h-6 w-6 animate-spin text-white" />
@@ -370,7 +370,7 @@ export default function Knowledge() {
                 );
               })}
 
-              <div className="pulse-ring relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-violet to-cyan shadow-[var(--shadow-glow-violet)]">
+              <div className="pulse-ring relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-primary shadow-[var(--shadow-soft)]">
                 <Brain className="h-9 w-9 text-white" />
               </div>
               <motion.p

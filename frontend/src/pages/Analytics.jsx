@@ -122,7 +122,7 @@ export default function Analytics() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4"
         >
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet to-cyan shadow-[var(--shadow-glow-violet)]">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-[var(--shadow-soft)]">
             <BarChart2 className="h-6 w-6 text-white" />
           </span>
           <div>

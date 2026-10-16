@@ -18,12 +18,12 @@ import useAuthStore from "../store/auth";
 import useDemoTourStore from "../store/demoTour";
 
 const items = [
-  { to: "/", label: "Generator", icon: Home },
-  { to: "/proposals", label: "Proposals", icon: ClipboardList },
-  { to: "/templates", label: "Templates", icon: FileText },
-  { to: "/knowledge", label: "Knowledge", icon: Brain },
-  { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/pricing", label: "Pricing", icon: CreditCard },
+  { to: "/app", label: "Generator", icon: Home },
+  { to: "/app/proposals", label: "Proposals", icon: ClipboardList },
+  { to: "/app/templates", label: "Templates", icon: FileText },
+  { to: "/app/knowledge", label: "Knowledge", icon: Brain },
+  { to: "/app/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/app/pricing", label: "Pricing", icon: CreditCard },
 ];
 
 export function Sidebar() {
@@ -41,7 +41,7 @@ export function Sidebar() {
       style={{ background: "var(--sidebar-bg)" }}
     >
       <Link
-        to="/"
+        to="/app"
         className="group relative flex h-12 w-12 items-center justify-center rounded-xl"
         aria-label="Draftly Home"
       >
@@ -58,7 +58,7 @@ export function Sidebar() {
 
       <nav className="flex flex-col items-center gap-1.5">
         {items.map(({ to, label, icon: Icon }) => {
-          const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
+          const active = to === "/app" ? pathname === "/app" : pathname.startsWith(to);
           return (
             <Link
               key={to}
@@ -69,16 +69,15 @@ export function Sidebar() {
               {active && (
                 <motion.span
                   layoutId="active-pill"
-                  className="absolute inset-0 rounded-xl bg-gradient-to-br from-violet/30 to-magenta/30 ring-1 ring-violet/60"
-                  style={{ boxShadow: "var(--shadow-glow-violet)" }}
+                  className="absolute inset-0 rounded-xl bg-surface-3 ring-1 ring-hairline-strong"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
               <span
                 className={`relative flex h-10 w-10 items-center justify-center rounded-xl border transition ${
                   active
-                    ? "border-violet/40 text-foreground"
-                    : "border-hairline text-muted-foreground hover:border-violet/40 hover:text-foreground"
+                    ? "border-transparent text-foreground"
+                    : "border-hairline text-muted-foreground hover:border-hairline-strong hover:text-foreground"
                 }`}
               >
                 <Icon className="h-[18px] w-[18px]" />
@@ -95,7 +94,7 @@ export function Sidebar() {
         <button
           onClick={toggle}
           aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-          className="group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-hairline text-muted-foreground transition hover:border-violet/40 hover:text-foreground"
+          className="group relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-hairline text-muted-foreground transition hover:border-hairline-strong hover:text-foreground"
         >
           <motion.span
             key={theme}
@@ -128,9 +127,9 @@ export function Sidebar() {
           </button>
         )}
         <Link
-          to="/settings"
+          to="/app/settings"
           aria-label="Settings"
-          className="group relative flex h-10 w-10 items-center justify-center rounded-xl border border-hairline text-muted-foreground hover:border-violet/40 hover:text-foreground"
+          className="group relative flex h-10 w-10 items-center justify-center rounded-xl border border-hairline text-muted-foreground hover:border-hairline-strong hover:text-foreground"
         >
           <Settings className="h-[18px] w-[18px]" />
           <span className="pointer-events-none absolute left-[52px] top-1/2 z-50 -translate-y-1/2 whitespace-nowrap rounded-md bg-surface-2 px-2 py-1 text-xs text-foreground opacity-0 shadow-lg ring-1 ring-hairline transition group-hover:opacity-100">
@@ -143,7 +142,7 @@ export function Sidebar() {
             logout();
             navigate("/login");
           }}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-hairline text-muted-foreground hover:text-magenta"
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-hairline text-muted-foreground hover:text-destructive"
         >
           <LogOut className="h-[18px] w-[18px]" />
         </button>

@@ -1,0 +1,65 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Draftly — Netlify deployment configuration (frontend / React SPA)
+#
+# Netlify hosts the static React build. The Django API runs separately
+# (Railway / Fly / Render) — see docs/DEPLOYMENT.md.
+#
+# Required Netlify environment variables (Site settings → Environment variables):
+#   VITE_API_URL              = https://<your-backend-host>   (no trailing slash)
+#   VITE_GOOGLE_CLIENT_ID     = <google-oauth-client-id>      (optional)
+#   VITE_SENTRY_DSN           = <sentry-dsn>                  (optional)
+# ─────────────────────────────────────────────────────────────────────────────
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Vite needs Node 20+; keeps the build reproducible on Netlify's builders.
+
+# ── SPA fallback ─────────────────────────────────────────────────────────────
+# Every unknown path serves index.html so client-side routing (react-router)
+# works on hard refresh / deep links. Real files (JS/CSS/images) are served
+# first because this redirect is NOT forced.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ── Security headers ─────────────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-XSS-Protection = "1; mode=block"
+
+# Hashed build assets are immutable — cache aggressively.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The HTML entry point must never be cached, so new deploys are picked up.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OPTIONAL — same-origin API proxy (avoids CORS entirely).
+#
+# If you prefer the browser to call the API on the same origin instead of
+# pointing VITE_API_URL at the backend host, uncomment the block below and
+# replace the host. Then set VITE_API_URL to empty so the client uses "/api".
+#
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://YOUR-BACKEND-HOST/api/:splat"
+#   status = 200
+#   force = true
+# ─────────────────────────────────────────────────────────────────────────────
