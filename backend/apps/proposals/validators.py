@@ -5,6 +5,8 @@ import re
 import google.generativeai as genai
 from django.conf import settings
 
+from apps.core.ai_keys import any_provider_configured, gemini_configured
+
 from . import claude_provider
 
 logger = logging.getLogger(__name__)
@@ -34,6 +36,10 @@ _configured = False
 
 def _ensure_configured():
     global _configured
+    # Never call the SDK with an empty key (it would hang on GCP ADC for ~60s).
+    # Raising lets classify_rfp_intent "fail open" immediately instead.
+    if not gemini_configured():
+        raise ValueError("GOOGLE_AI_API_KEY not configured")
     if not _configured:
         genai.configure(api_key=settings.GOOGLE_AI_API_KEY)
         _configured = True
@@ -119,6 +125,16 @@ def classify_rfp_intent(text: str) -> dict:
             "is_rfp": False,
             "confidence": 0.9,
             "reason": "no project/RFP terminology detected — not a real brief",
+        }
+
+    if not any_provider_configured():
+        # The LLM classifier exists to protect LLM quota. With no provider
+        # configured there is no quota to protect, so don't block the user on a
+        # check we cannot run — the cheap heuristics above already filtered junk.
+        return {
+            "is_rfp": True,
+            "confidence": 1.0,
+            "reason": "intent check skipped — no AI provider configured",
         }
 
     try:

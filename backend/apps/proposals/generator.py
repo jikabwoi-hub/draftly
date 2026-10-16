@@ -7,6 +7,7 @@ import google.generativeai as genai
 from django.conf import settings
 from pgvector.django import CosineDistance
 
+from apps.core.ai_keys import any_provider_configured, gemini_configured
 from apps.core.embeddings import embed_text
 from apps.documents.models import Chunk
 
@@ -127,6 +128,11 @@ _configured = False
 
 def _ensure_configured():
     global _configured
+    # Never touch the SDK with an empty key: it would fall back to Application
+    # Default Credentials and hang ~60s on the GCP metadata server. Raise a
+    # clear, fast error so callers take their graceful fallback path instead.
+    if not gemini_configured():
+        raise ValueError("GOOGLE_AI_API_KEY not configured")
     if not _configured:
         genai.configure(api_key=settings.GOOGLE_AI_API_KEY)
         _configured = True
@@ -361,6 +367,10 @@ def _analyze_rfp(rfp_text: str) -> dict:
 
     Tries Claude first (primary), falls back to Gemini on failure.
     """
+    if not any_provider_configured():
+        # No AI provider \u2014 skip analysis rather than hang on a doomed SDK call.
+        return {}
+
     if settings.CLAUDE_ENABLED and settings.ANTHROPIC_API_KEY:
         try:
             return claude_provider.analyze_rfp(RFP_ANALYSIS_PROMPT, rfp_text)
@@ -533,6 +543,107 @@ def _generate_with_groq(
     return _parse_sections(raw, "Groq", schema_keys)
 
 
+def _generate_local_template(
+    rfp_text: str,
+    context: str,
+    rfp_brief: dict | None,
+    schema: list[tuple[str, str]],
+) -> dict:
+    """Build a complete, correctly-sectioned draft locally.
+
+    Used only when no AI provider is configured. It is not AI-written, but it
+    produces an editable, sensibly-structured proposal so the whole product
+    flow (generate \u2192 edit \u2192 export) works end-to-end without API keys.
+    """
+    brief = rfp_brief or {}
+    client = (brief.get("client_name") or "").strip() or "your organisation"
+    industry = (brief.get("industry") or "").strip() or "your sector"
+    reqs = [str(r).strip() for r in (brief.get("key_requirements") or []) if str(r).strip()]
+    compliance = [
+        str(c).strip() for c in (brief.get("compliance_requirements") or []) if str(c).strip()
+    ]
+    timeline = (brief.get("timeline") or "").strip()
+    budget = (brief.get("budget_signals") or "").strip()
+    reqs_text = "; ".join(reqs[:6]) or "the deliverables set out in your brief"
+    compliance_text = ", ".join(compliance) or "applicable industry standards"
+    context_text = " ".join((context or "").split())[:400]
+
+    bodies = {
+        "executive_summary": (
+            f"Thank you for the opportunity to respond to {client}'s brief. We understand the "
+            f"objectives and are confident we can deliver a high-quality outcome for {industry}. "
+            f"This proposal sets out our understanding, our approach, our relevant experience, "
+            f"and the commercial terms."
+        ),
+        "understanding_requirements": (
+            f"Our reading of the brief is that {client} needs {reqs_text}. "
+            + (
+                f"The brief also references {compliance_text}, which we will address directly. "
+                if compliance
+                else ""
+            )
+            + (f"The stated timeline is {timeline}. " if timeline else "")
+            + "Below we translate these requirements into a concrete delivery plan."
+        ),
+        "proposed_solution": (
+            f"We propose a solution shaped around {reqs_text}. Our approach is pragmatic and "
+            f"outcome-led: we start from your goals, design the simplest thing that works, and "
+            f"iterate with you in short cycles so you see value early and often."
+        ),
+        "relevant_experience": (
+            f"We have delivered comparable work for clients in {industry}. "
+            + (
+                f"Relevant highlights from our portfolio include: {context_text}"
+                if context_text
+                else "Our case studies and past proposals in your knowledge base show directly "
+                "comparable engagements."
+            )
+        ),
+        "team_qualifications": (
+            "Your engagement will be led by a senior delivery lead supported by specialists in "
+            "design, engineering, and quality assurance. We keep teams small and senior so "
+            "decisions are fast and accountability is clear."
+        ),
+        "project_timeline": (
+            "We propose a phased delivery: discovery and planning, build and review cycles, then "
+            "launch and handover. "
+            + (
+                f"We will align to the timeline of {timeline}."
+                if timeline
+                else "We will confirm exact dates at kick-off."
+            )
+        ),
+        "methodology": (
+            "Our methodology is collaborative and transparent. We work in two-week iterations "
+            "with a demo at the end of each, keep a shared backlog, and maintain a single source "
+            "of truth for progress so you always know where things stand."
+        ),
+        "pricing": (
+            "We offer transparent, milestone-based pricing. "
+            + (f"Noting the budget guidance of {budget}, " if budget else "")
+            + "a detailed cost breakdown is provided on request; we will agree the commercial "
+            "structure before work begins."
+        ),
+        "why_us": (
+            f"We combine deep domain experience in {industry} with a delivery model built for "
+            f"accountability. You get senior people, clear communication, and a partner invested "
+            f"in your outcome \u2014 not just a supplier."
+        ),
+        "appendix": (
+            "Supporting materials, references, and detailed specifications can be provided on "
+            "request. We are happy to expand any section of this proposal to meet your evaluation "
+            "requirements."
+        ),
+    }
+
+    sections: dict = {}
+    for key, label in schema:
+        sections[key] = bodies.get(key) or (
+            f"{label}: we will tailor this section to {client}'s requirements \u2014 {reqs_text}."
+        )
+    return sections
+
+
 def _generate_with_fallbacks(
     system_prompt: str,
     user_message: str,
@@ -656,12 +767,18 @@ def generate_proposal_with_metrics(
     )
 
     gen_started = time.perf_counter()
-    provider, sections = _generate_with_fallbacks(
-        system_prompt,
-        user_message,
-        schema_keys,
-        max_tokens=preset["max_tokens"],
-    )
+    if any_provider_configured():
+        provider, sections = _generate_with_fallbacks(
+            system_prompt,
+            user_message,
+            schema_keys,
+            max_tokens=preset["max_tokens"],
+        )
+    else:
+        # No AI provider configured \u2014 degrade gracefully to a local template
+        # instead of hanging on a doomed SDK call and failing the proposal.
+        provider = "local-template"
+        sections = _generate_local_template(rfp_text, context, rfp_brief, schema)
     generation_latency_ms = int((time.perf_counter() - gen_started) * 1000)
 
     _emit("polishing", {"provider": provider, "sections": len(sections)})

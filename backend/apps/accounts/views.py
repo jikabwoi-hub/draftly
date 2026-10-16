@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlparse
 
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
@@ -40,6 +41,45 @@ from .serializers import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _trusted_frontend_origins():
+    """Set of origins we are willing to embed in outbound email links.
+
+    Built from the configured CORS allow-list plus FRONTEND_URL so that links
+    keep working behind tunnels / preview domains without trusting arbitrary
+    attacker-supplied ``Origin`` headers.
+    """
+    origins = set()
+    for origin in getattr(settings, "CORS_ALLOWED_ORIGINS", []) or []:
+        if origin:
+            origins.add(origin.rstrip("/"))
+    frontend_url = (getattr(settings, "FRONTEND_URL", "") or "").rstrip("/")
+    if frontend_url:
+        origins.add(frontend_url)
+    return origins
+
+
+def _frontend_base_url(request):
+    """Best frontend base URL to put in verification / reset / invite emails.
+
+    Prefers the Origin (or Referer) the user is actually browsing from when it
+    is a trusted origin, so links work no matter which domain the app is served
+    on; otherwise falls back to the configured ``FRONTEND_URL``.
+    """
+    fallback = (getattr(settings, "FRONTEND_URL", "") or "").rstrip("/")
+
+    candidate = (request.headers.get("Origin") or "").rstrip("/")
+    if not candidate:
+        referer = request.headers.get("Referer") or ""
+        if referer:
+            parsed = urlparse(referer)
+            if parsed.scheme and parsed.netloc:
+                candidate = f"{parsed.scheme}://{parsed.netloc}"
+
+    if candidate and candidate in _trusted_frontend_origins():
+        return candidate
+    return fallback
 
 
 class GoogleAwareTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -223,7 +263,7 @@ def password_reset_request(request):
         try:
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
-            reset_url = f"{settings.FRONTEND_URL}/reset-password?uid={uid}&token={token}"
+            reset_url = f"{_frontend_base_url(request)}/reset-password?uid={uid}&token={token}"
             send_mail(
                 subject="Reset your Draftly password",
                 message=(
@@ -378,7 +418,7 @@ def team_invites(request):
         )
 
     invite = Invitation.objects.create(org=org, email=email, role=role, invited_by=request.user)
-    accept_url = f"{settings.FRONTEND_URL}/accept-invite?token={invite.token}"
+    accept_url = f"{_frontend_base_url(request)}/accept-invite?token={invite.token}"
     try:
         send_mail(
             subject=f"You've been invited to join {org.name} on Draftly",

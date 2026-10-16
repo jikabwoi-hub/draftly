@@ -76,11 +76,27 @@ class PDFSecurityError(Exception):
     """Raised when a PDF fails security validation."""
 
 
-def _walk_object(obj, found: set, depth: int = 0, max_depth: int = 50):
-    """Recursively scan a pikepdf object graph for dangerous keys."""
+def _walk_object(obj, found: set, visited: set, depth: int = 0, max_depth: int = 50):
+    """Recursively scan a pikepdf object graph for dangerous keys.
+
+    ``visited`` holds the ``(objnum, gen)`` of indirect objects already scanned.
+    Without it, PDFs whose objects share sub-graphs (or contain reference
+    cycles) are re-walked exponentially \u2014 a hang/DoS vector on large uploads.
+    """
     if depth > max_depth:
         return
     try:
+        # Skip indirect objects we've already scanned. Direct objects report
+        # objgen == (0, 0) and are cheap, so we only memoise indirect ones.
+        try:
+            objgen = obj.objgen
+        except Exception:
+            objgen = (0, 0)
+        if objgen != (0, 0):
+            if objgen in visited:
+                return
+            visited.add(objgen)
+
         if isinstance(obj, pikepdf.Dictionary):
             keys = list(obj.keys())
             for key in keys:
@@ -96,12 +112,12 @@ def _walk_object(obj, found: set, depth: int = 0, max_depth: int = 50):
                     pass
             for key in keys:
                 try:
-                    _walk_object(obj[key], found, depth + 1, max_depth)
+                    _walk_object(obj[key], found, visited, depth + 1, max_depth)
                 except Exception:
                     continue
         elif isinstance(obj, pikepdf.Array):
             for item in obj:
-                _walk_object(item, found, depth + 1, max_depth)
+                _walk_object(item, found, visited, depth + 1, max_depth)
     except Exception:
         return
 
@@ -139,17 +155,20 @@ def validate_and_sanitize_pdf(data: bytes) -> bytes:
 
     try:
         threats: set = set()
+        visited: set = set()
 
         root = pdf.Root
-        _walk_object(root, threats)
+        _walk_object(root, threats, visited)
 
         if "/AcroForm" in root.keys():
             acroform = root["/AcroForm"]
             if isinstance(acroform, pikepdf.Dictionary) and "/XFA" in acroform.keys():
                 threats.add("/XFA")
 
+        # Also scan orphan objects (unreachable from the catalog) for defence in
+        # depth. The shared ``visited`` set keeps this linear, not exponential.
         for obj in pdf.objects:
-            _walk_object(obj, threats)
+            _walk_object(obj, threats, visited)
 
         if threats:
             logger.warning("PDF rejected. Dangerous constructs: %s", sorted(threats))
